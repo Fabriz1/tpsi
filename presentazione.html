@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progetto Web Service Gas: Un Viaggio Tecnologico</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+    <!-- Includi AOS CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep-space: #0f0c29;
+            --bg-space-blue: #1c1c3c;
+            --bg-card: #24244e;
+            --accent-neon-teal: #00f5d4;
+            --accent-bright-purple: #9b5de5;
+            --accent-orange-flare: #fca311;
+            --text-primary: #e0e5ff;
+            --text-secondary: #b0b8e0;
+            --border-subtle: rgba(0, 245, 212, 0.2);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.8;
+            color: var(--text-primary);
+            background: linear-gradient(135deg, var(--bg-deep-space) 0%, var(--bg-space-blue) 100%);
+            overflow-x: hidden; /* Evita scroll orizzontale da AOS */
+        }
+
+        .container {
+            width: 90%;
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 50px 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 80px 20px 60px;
+            color: white;
+        }
+        header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(2.8em, 7vw, 4.5em);
+            color: var(--accent-neon-teal);
+            text-shadow: 0 0 15px var(--accent-neon-teal), 0 0 30px var(--accent-neon-teal);
+            margin-bottom: 15px;
+            line-height: 1.2;
+        }
+        header p.subtitle {
+            font-size: clamp(1.1em, 3vw, 1.5em);
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 30px auto;
+        }
+
+        .section {
+            background-color: var(--bg-card);
+            padding: 35px;
+            margin-bottom: 50px;
+            border-radius: 12px;
+            border: 1px solid var(--border-subtle);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(1.8em, 5vw, 2.5em);
+            color: var(--accent-neon-teal);
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--accent-neon-teal);
+            display: inline-block; /* Per far funzionare il border-bottom correttamente */
+        }
+        h3 {
+            font-size: clamp(1.3em, 4vw, 1.8em);
+            color: var(--accent-bright-purple);
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+        p, li { color: var(--text-secondary); font-size: 1.05em; }
+        ul { list-style-position: outside; padding-left: 20px; }
+        li { margin-bottom: 10px; }
+        strong { color: var(--accent-orange-flare); font-weight: 600; }
+
+        pre {
+            background-color: rgba(10, 10, 30, 0.9);
+            color: #e0e0e0;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            border: 1px solid var(--border-subtle);
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+            line-height: 1.6;
+        }
+        .sql-keyword, .java-keyword { color: #61dafb; } /* Blu chiaro per keyword */
+        .java-string, .json-string { color: #ffcc99; } /* Arancio chiaro per stringhe */
+        .java-comment { color: #77cc77; font-style: italic; } /* Verde per commenti */
+        .java-type { color: #99ccff; } /* Azzurro per tipi */
+        .json-key { color: var(--accent-bright-purple); }
+        .json-number { color: #ccff99; } /* Verde lime per numeri */
+
+        .tech-stack span, .reasons-list span {
+            display: inline-block;
+            background-color: var(--accent-bright-purple);
+            color: white;
+            padding: 5px 12px;
+            margin: 5px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+
+        .architecture-diagram {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .arch-component {
+            display: inline-block; /* O flex per layout più complessi */
+            vertical-align: top;
+            background-color: var(--bg-space-blue);
+            padding: 20px;
+            margin: 10px;
+            border-radius: 8px;
+            border: 1px solid var(--accent-neon-teal);
+            width: 28%;
+            min-width: 200px;
+            box-shadow: 0 0 15px rgba(0, 245, 212, 0.1);
+        }
+        .arch-component h4 {
+            color: var(--accent-neon-teal);
+            margin-bottom: 10px;
+            font-family: 'Orbitron', sans-serif;
+        }
+        .arch-arrow {
+            font-size: 2em;
+            color: var(--accent-orange-flare);
+            margin: 0 15px;
+            display: inline-block;
+            transform: translateY(40px); /* Allinea con il centro dei box circa */
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            margin-top: 50px;
+            color: var(--text-secondary);
+            font-size: 0.9em;
+            border-top: 1px solid var(--border-subtle);
+        }
+         /* Stili per quando Javascript è disabilitato o AOS non si carica */
+        [data-aos] {
+            opacity: 1 !important;
+            transform: none !important;
+        }
+    </style>
+</head>
+<body>
+
+    <header data-aos="fade-down" data-aos-duration="1000">
+        <h1>Progetto Web Service Gas</h1>
+        <p class="subtitle">Un'analisi tecnica della progettazione, implementazione e delle sfide di un backend RESTful per la gestione delle manutenzioni.</p>
+    </header>
+
+    <div class="container">
+
+        <section class="section" id="obiettivo">
+            <h2 data-aos="fade-right">🎯 Obiettivo del Progetto</h2>
+            <p data-aos="fade-up">L'obiettivo primario di questo progetto è stato sviluppare un <strong>Web Service RESTful robusto e scalabile</strong> per la gestione delle manutenzioni periodiche degli impianti a gas. Il sistema è pensato per servire come backend per un'applicazione client (ad esempio, un'app mobile per tecnici), consentendo di:</p>
+            <ul data-aos="fade-up" data-aos-delay="200">
+                <li>Consultare la lista degli impianti che necessitano di manutenzione, filtrati per area geografica.</li>
+                <li>Registrare l'avvenuta manutenzione di uno specifico impianto, aggiornandone lo stato e la data dell'intervento.</li>
+            </ul>
+            <p data-aos="fade-up" data-aos-delay="300">L'intento era quello di creare una soluzione centralizzata per migliorare l'efficienza, la tracciabilità e l'accuratezza dei dati relativi alle manutenzioni.</p>
+        </section>
+
+        <section class="section" id="architettura">
+            <h2 data-aos="fade-left">🏗️ Architettura del Sistema</h2>
+            <p data-aos="fade-up">Il sistema adotta un'architettura client-server classica, con i seguenti componenti principali:</p>
+            <div class="architecture-diagram" data-aos="zoom-in" data-aos-duration="800">
+                <div class="arch-component" data-aos="fade-right" data-aos-delay="200">
+                    <h4>📱 App Client</h4>
+                    <p>Interfaccia per i tecnici (es. mobile app). Invia richieste HTTP.</p>
+                </div>
+                <span class="arch-arrow" data-aos="fade-in" data-aos-delay="500">➔</span>
+                <div class="arch-component" data-aos="fade-up" data-aos-delay="400">
+                    <h4>⚙️ Web Service (Java Servlet)</h4>
+                    <p>Logica di business, gestione richieste, interazione DB. Espone API REST.</p>
+                </div>
+                <span class="arch-arrow" data-aos="fade-in" data-aos-delay="500">➔</span>
+                <div class="arch-component" data-aos="fade-left" data-aos-delay="600">
+                    <h4>🛢️ Database (MySQL)</h4>
+                    <p>Memorizzazione persistente dei dati degli impianti e delle manutenzioni.</p>
+                </div>
+            </div>
+            <p data-aos="fade-up" data-aos-delay="200">Il client comunica con il Web Service tramite richieste HTTP. Il Web Service, implementato come un Servlet Java, elabora queste richieste, interagisce con il database MySQL/MariaDB utilizzando JDBC, e restituisce risposte in formato JSON.</p>
+        </section>
+
+        <section class="section" id="tecnologie">
+            <h2 data-aos="fade-right">🛠️ Stack Tecnologico</h2>
+            <p data-aos="fade-up">La scelta delle tecnologie è stata guidata dalla necessità di creare un sistema affidabile, manutenibile e basato su standard diffusi:</p>
+            <div class="tech-stack" data-aos="fade-up" data-aos-delay="200">
+                <span>Java</span> <span>Servlet API</span> <span>JDBC</span> <span>MySQL/MariaDB</span> <span>Apache Tomcat</span> <span>XAMPP (per sviluppo)</span> <span>JSON</span> <span>Gson</span> <span>HTTP/REST</span> <span>Maven (per build)</span>
+            </div>
+            <h3 data-aos="fade-up" data-aos-delay="300">Motivazioni delle Scelte:</h3>
+            <ul class="reasons-list" data-aos="fade-up" data-aos-delay="400">
+                <li><strong>Java e Servlet API:</strong> <span>Piattaforma robusta e matura per applicazioni server-side, ampiamente utilizzata in ambito enterprise.</span></li>
+                <li><strong>JDBC:</strong> <span>API standard per l'accesso ai database da Java, garantendo portabilità tra diversi RDBMS.</span></li>
+                <li><strong>MySQL/MariaDB:</strong> <span>Database relazionali open-source potenti, affidabili e largamente diffusi.</span></li>
+                <li><strong>Tomcat & XAMPP:</strong> <span>Tomcat come servlet container di riferimento. XAMPP per facilitare il setup dell'ambiente di sviluppo locale integrando Apache, MySQL e Tomcat.</span></li>
+                <li><strong>JSON & Gson:</strong> <span>JSON come formato leggero e universale per lo scambio dati. Gson per una facile conversione tra oggetti Java e JSON.</span></li>
+                <li><strong>REST:</strong> <span>Stile architetturale che sfrutta i metodi HTTP standard (GET, PUT) per creare API web scalabili e stateless.</span></li>
+            </ul>
+        </section>
+
+        <section class="section" id="funzionalita">
+            <h2 data-aos="fade-left">⚙️ Funzionalità Chiave e API</h2>
+            <p data-aos="fade-up">Il Web Service espone due endpoint principali:</p>
+
+            <div data-aos="fade-up" data-aos-delay="100">
+                <h3>1. Ottenere Impianti da Manutenere</h3>
+                <p>Permette al client di richiedere la lista degli impianti che sono in stato 'N' (Non manutenuto) e si trovano in una specifica area geografica.</p>
+                <ul>
+                    <li><strong>Metodo HTTP:</strong> <code>GET</code></li>
+                    <li><strong>Endpoint:</strong> <code>/serviziogas/impianti</code></li>
+                    <li><strong>Parametri Query:</strong> <code>lat_min, lat_max, lon_min, lon_max</code></li>
+                    <li><strong>Risposta Esempio (JSON):</strong>
+                        <pre><code class="language-json">[
+  { "codice": 101, "denominazione": "Impianto Centrale", ... "statoManutenzione": "N" },
+  { "codice": 102, "denominazione": "Impianto Nord", ... "statoManutenzione": "N" }
+]</code></pre>
+                    </li>
+                </ul>
+                <p><strong>Snippet dal `doGet()` del Servlet (Logica SQL):</strong></p>
+                <pre data-aos="fade-up"><code class="language-java">
+<span class="java-type">String</span> sql = <span class="java-string">"SELECT ... FROM impianto "</span> +
+             <span class="java-string">"WHERE stato_manutenzione = 'N' "</span> +
+             <span class="java-string">"AND latitudine BETWEEN ? AND ? "</span> +
+             <span class="java-string">"AND longitudine BETWEEN ? AND ?"</span>;
+<span class="java-comment">// ... uso di PreparedStatement per impostare i parametri e eseguire la query ...</span>
+<span class="java-comment">// ... i risultati vengono mappati su oggetti ImpiantoDati e convertiti in JSON con Gson ...</span>
+                </code></pre>
+            </div>
+
+            <div data-aos="fade-up" data-aos-delay="300">
+                <h3 style="margin-top:40px;">2. Registrare Manutenzione Effettuata</h3>
+                <p>Consente al client di aggiornare lo stato di un impianto a 'S' (Manutenuto) e di registrare la data e l'ora dell'intervento.</p>
+                <ul>
+                    <li><strong>Metodo HTTP:</strong> <code>PUT</code></li>
+                    <li><strong>Endpoint:</strong> <code>/serviziogas/impianti/{codiceImpianto}</code></li>
+                    <li><strong>Corpo Richiesta (JSON):</strong>
+                        <pre><code class="language-json">{ "data_ora": "2024-05-23T14:30:00" }</code></pre>
+                    </li>
+                    <li><strong>Risposta Successo:</strong> HTTP Status <code>204 No Content</code></li>
+                </ul>
+                <p><strong>Snippet dal `doPut()` del Servlet (Logica SQL):</strong></p>
+                <pre data-aos="fade-up"><code class="language-java">
+<span class="java-type">String</span> sql = <span class="java-string">"UPDATE impianto SET stato_manutenzione = 'S', data_ora = ? WHERE codice = ?"</span>;
+<span class="java-comment">// ... estrazione codiceImpianto dall'URL e data_ora dal corpo JSON ...</span>
+<span class="java-comment">// ... uso di PreparedStatement per impostare i parametri ed eseguire l'update ...</span>
+<span class="java-keyword">int</span> righeModificate = pstmt.executeUpdate();
+<span class="java-keyword">if</span> (righeModificate > 0) {
+    response.setStatus(<span class="java-type">HttpServletResponse</span>.SC_NO_CONTENT);
+} <span class="java-keyword">else</span> {
+    response.sendError(<span class="java-type">HttpServletResponse</span>.SC_NOT_FOUND, <span class="java-string">"Impianto non trovato."</span>);
+}
+                </code></pre>
+            </div>
+        </section>
+
+        <section class="section" id="sfide">
+            <h2 data-aos="fade-right">🧗 Sfide Incontrate e Soluzioni</h2>
+            <p data-aos="fade-up">Durante lo sviluppo, sono emerse alcune difficoltà tipiche di progetti di questo tipo:</p>
+            <ul data-aos="fade-up" data-aos-delay="100">
+                <li>
+                    <strong>Configurazione Ambiente XAMPP/Tomcat/MySQL:</strong> La sfida iniziale è stata far comunicare correttamente tutti i componenti. Problemi come l'arresto inaspettato di MySQL si sono presentati, spesso dovuti a file di log di InnoDB corrotti a seguito di spegnimenti non corretti.
+                    <br><em>Soluzione:</em> Analisi attenta dei log di errore di MariaDB/MySQL, rimozione dei file di log `ib_logfile*` (e in casi estremi di `ibdata1` dopo backup) per forzare InnoDB a ricrearli, e adozione di una procedura di spegnimento più rigorosa dei servizi dal pannello XAMPP.
+                </li>
+                <li>
+                    <strong>Gestione Dipendenze Java (JARs):</strong> Assicurarsi che MySQL Connector/J e Gson fossero disponibili al runtime di Tomcat.
+                    <br><em>Soluzione:</em> Corretta inclusione dei JAR nella cartella `WEB-INF/lib` del progetto web, o gestione tramite Maven con `<packaging>war</packaging>` nel `pom.xml`.
+                </li>
+                <li>
+                    <strong>Interazione JDBC e Sicurezza SQL:</strong> Evitare SQL injection e gestire correttamente le connessioni.
+                    <br><em>Soluzione:</em> Utilizzo esclusivo di `PreparedStatement` con placeholder `?` e gestione delle risorse JDBC con blocchi `try-with-resources`.
+                </li>
+                <li>
+                    <strong>Debug Client-Server:</strong> Comprendere il flusso delle richieste e identificare la fonte degli errori (client, server, database).
+                    <br><em>Soluzione:</em> Logging estensivo sia nel servlet (`log()`) che nel client (stampe a console), utilizzo di strumenti come Postman per testare gli endpoint individualmente, e ispezione del database con phpMyAdmin.
+                </li>
+            </ul>
+        </section>
+
+        <section class="section" id="conclusioni">
+            <h2 data-aos="fade-left">🏁 Conclusioni e Apprendimenti</h2>
+            <p data-aos="fade-up">Il progetto ha permesso di sviluppare con successo un Web Service RESTful funzionante, rispondendo agli obiettivi prefissati. Le principali lezioni apprese includono l'importanza di una solida comprensione dell'architettura HTTP, la gestione attenta dell'ambiente di sviluppo e deploy, e l'adozione di pratiche di programmazione sicure, specialmente nell'interazione con i database.</p>
+            <p data-aos="fade-up" data-aos-delay="100">Le difficoltà incontrate, sebbene a volte frustranti, sono state fondamentali per acquisire esperienza pratica nel troubleshooting e nella risoluzione di problemi reali in un contesto client-server. Il sistema attuale costituisce una base solida per future espansioni, come l'aggiunta di autenticazione, più endpoint o un'interfaccia frontend dedicata.</p>
+        </section>
+
+    </div>
+
+    <footer>
+        <p data-aos="fade-up" data-aos-duration="1000">Grazie per l'attenzione!</p>
+    </footer>
+
+    <!-- Includi AOS JS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Inizializza AOS
+        AOS.init({
+            duration: 800, // Durata animazioni in ms
+            once: false, // Le animazioni si ripetono se si torna indietro con lo scroll (imposta a true per eseguirle solo una volta)
+            offset: 50, // Offset (in px) dall'originale punto di trigger
+            easing: 'ease-in-out-sine', // Tipo di easing
+        });
+    </script>
+</body>
+</html>
