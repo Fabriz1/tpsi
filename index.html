@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Service Gas: Guida Tecnica Essenziale</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Variabili CSS per facilitare la personalizzazione */
+        :root {
+            --bg-color: #12121F; /* Sfondo scuro principale */
+            --card-bg-color: #1E1E2D; /* Sfondo per card e blocchi di codice */
+            --text-color: #E0E0E0; /* Colore testo principale */
+            --heading-color: #61DAFB; /* Blu acceso per titoli (ispirato a React) */
+            --accent-color-1: #00F5D4; /* Verde acqua per accenti */
+            --accent-color-2: #9B5DE5; /* Viola per altri accenti */
+            --sql-keyword: #569CD6; /* Blu per keyword SQL */
+            --java-keyword: #C586C0; /* Viola per keyword Java */
+            --java-string: #CE9178; /* Arancio per stringhe Java */
+            --java-comment: #6A9955; /* Verde per commenti Java */
+            --java-type: #4EC9B0; /* Turchese per tipi Java */
+            --json-key: var(--accent-color-2);
+            --json-string: var(--java-string);
+            --json-number: #B5CEA8; /* Verde chiaro per numeri JSON */
+            --border-color: #3A3A5A;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.7;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        section {
+            background-color: var(--card-bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        h1, h2, h3 {
+            font-family: 'Roboto', sans-serif;
+            color: var(--heading-color);
+            margin-top: 0;
+        }
+        h1 {
+            font-size: 2.8em;
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 2px solid var(--heading-color);
+            padding-bottom: 20px;
+        }
+        h2 {
+            font-size: 2em;
+            margin-bottom: 25px;
+            border-left: 5px solid var(--accent-color-1);
+            padding-left: 15px;
+        }
+        h3 {
+            font-size: 1.5em;
+            color: var(--accent-color-1);
+            margin-bottom: 15px;
+            margin-top: 30px;
+        }
+
+        p {
+            margin-bottom: 15px;
+            font-size: 1.05em;
+        }
+
+        strong {
+            color: var(--accent-color-1);
+            font-weight: bold;
+        }
+
+        /* Stile per gli snippet di codice */
+        pre {
+            background-color: #0D0D1B; /* Sfondo ancora più scuro per il codice */
+            color: #D4D4D4; /* Grigio chiaro per il testo del codice */
+            padding: 20px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 20px 0;
+            border: 1px solid var(--border-color);
+            font-size: 0.95em; /* Leggermente più piccolo per più contenuto */
+        }
+        pre code {
+            font-family: 'Roboto Mono', monospace; /* Font monospace per il codice */
+            line-height: 1.6;
+        }
+
+        /* Classi per la colorazione della sintassi (semplificata) */
+        .sql-keyword { color: var(--sql-keyword); font-weight: bold; }
+        .java-keyword { color: var(--java-keyword); font-weight: bold; }
+        .java-string { color: var(--java-string); }
+        .java-comment { color: var(--java-comment); font-style: italic; }
+        .java-type { color: var(--java-type); }
+        .java-annotation { color: #D7BA7D; } /* Giallo ocra per annotazioni */
+        .json-key { color: var(--json-key); font-weight: bold; }
+        .json-string { color: var(--json-string); }
+        .json-number { color: var(--json-number); }
+
+
+        .architecture-diagram {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start; /* Allinea in alto se le descrizioni variano */
+            flex-wrap: wrap; /* Va a capo su schermi piccoli */
+            margin: 30px 0;
+            gap: 20px; /* Spazio tra i componenti */
+        }
+        .arch-component {
+            background-color: #2a2a3f;
+            padding: 20px;
+            border-radius: 6px;
+            text-align: center;
+            border: 1px solid var(--accent-color-2);
+            width: calc(33.333% - 20px); /* Circa un terzo, con spazio per gap */
+            min-width: 200px; /* Minima larghezza */
+        }
+        .arch-component h3 {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            color: var(--accent-color-2);
+        }
+        .arch-component p { font-size: 0.9em; }
+
+        .api-definition ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        .api-definition li {
+            margin-bottom: 10px;
+        }
+        .api-definition li strong {
+            display: inline-block;
+            width: 150px; /* Allinea le etichette */
+            color: var(--text-color);
+        }
+
+        .setup-steps { list-style-type: decimal; padding-left: 20px; }
+        .setup-steps li {
+            margin-bottom: 20px;
+            padding-left: 10px;
+        }
+        .setup-steps li strong {
+             display: block; /* Nome del passo su una nuova riga */
+             margin-bottom: 5px;
+             color: var(--accent-color-1);
+        }
+        .setup-steps ul {
+            list-style-type: disc;
+            padding-left: 25px;
+            margin-top: 8px;
+        }
+        .setup-steps ul li { margin-bottom: 5px; font-size: 0.95em;}
+
+
+        footer {
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 40px;
+            color: #aaa;
+            font-size: 0.9em;
+            border-top: 1px solid var(--border-color);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Guida Tecnica al Web Service Gas</h1>
+
+        <section id="introduzione">
+            <h2>Introduzione al Progetto</h2>
+            <p>Questo documento spiega come è strutturato e come funziona un <strong>Web Service di tipo REST</strong> progettato per gestire la manutenzione di impianti a gas. L'obiettivo è permettere a un'applicazione mobile (usata da un tecnico) di interagire con un database centrale.</p>
+            <p>Vedremo i componenti principali: il database, il servlet Java che funge da backend, e l'API REST che definisce la comunicazione.</p>
+        </section>
+
+        <section id="architettura">
+            <h2>Architettura Generale del Sistema</h2>
+            <p>Il sistema è composto da tre parti fondamentali che comunicano tra loro:</p>
+            <div class="architecture-diagram">
+                <div class="arch-component">
+                    <h3>📱 App Mobile (Client)</h3>
+                    <p>L'applicazione utilizzata dal tecnico per visualizzare gli impianti e registrare le manutenzioni. Invia richieste al Web Service.</p>
+                </div>
+                <div class="arch-component">
+                    <h3>⚙️ Web Service (Backend Java Servlet)</h3>
+                    <p>Il "cervello" del sistema. Riceve le richieste dall'app, elabora la logica (es. interagisce con il database) e invia risposte.</p>
+                </div>
+                <div class="arch-component">
+                    <h3>🛢️ Database (MySQL)</h3>
+                    <p>Memorizza in modo persistente tutte le informazioni sugli impianti, il loro stato di manutenzione, ecc.</p>
+                </div>
+            </div>
+            <p><strong>Flusso tipico:</strong> L'App Mobile invia una richiesta HTTP (es. "aggiorna stato impianto X") al Web Service. Il Web Service valida la richiesta, esegue l'operazione corrispondente sul Database (es. un comando SQL UPDATE) e poi restituisce una risposta HTTP all'App (es. "operazione completata con successo").</p>
+        </section>
+
+        <section id="database-sql">
+            <h2>Il Database: Struttura e Dati (SQL)</h2>
+            <p>Il cuore del sistema è il database relazionale (MySQL in questo caso) che conserva i dati. La tabella principale è `impianto`.</p>
+            <h3>Definizione della Tabella `impianto`</h3>
+            <p>Ecco lo script SQL per creare la tabella:</p>
+            <pre><code class="language-sql">
+<span class="sql-keyword">CREATE DATABASE IF NOT EXISTS</span> gas;
+<span class="sql-keyword">USE</span> gas;
+
+<span class="sql-keyword">CREATE TABLE IF NOT EXISTS</span> impianto (
+    codice <span class="sql-keyword">INTEGER NOT NULL</span>,
+    denominazione <span class="sql-keyword">VARCHAR</span>(64) <span class="sql-keyword">NOT NULL</span>,
+    latitudine <span class="sql-keyword">FLOAT NOT NULL</span>,
+    longitudine <span class="sql-keyword">FLOAT NOT NULL</span>,
+    stato_manutenzione <span class="sql-keyword">CHAR</span>(1) <span class="sql-keyword">NOT NULL</span>, <span class="java-comment">-- 'N' = Non manutenuto, 'S' = Manutenuto</span>
+    data_ora <span class="sql-keyword">DATETIME NULL</span>, <span class="java-comment">-- Data/ora della manutenzione (se 'S')</span>
+    <span class="sql-keyword">PRIMARY KEY</span> (codice)
+);</code></pre>
+            <p><strong>Spiegazione Campi:</strong></p>
+            <ul>
+                <li><code>codice</code>: Identificativo numerico univoco dell'impianto (Chiave Primaria).</li>
+                <li><code>denominazione</code>: Nome testuale dell'impianto.</li>
+                <li><code>latitudine</code>, <code>longitudine</code>: Coordinate geografiche.</li>
+                <li><code>stato_manutenzione</code>: Un singolo carattere che indica se la manutenzione è stata fatta ('N') o no ('S').</li>
+                <li><code>data_ora</code>: Se <code>stato_manutenzione</code> è 'S', questo campo conterrà la data e l'ora esatta della manutenzione. Altrimenti è <code>NULL</code>.</li>
+            </ul>
+            <h3>Esempio di Inserimento Dati</h3>
+            <pre><code class="language-sql">
+<span class="sql-keyword">INSERT INTO</span> impianto(codice, denominazione, latitudine, longitudine, stato_manutenzione) 
+<span class="sql-keyword">VALUES</span> (123, <span class="java-string">'Livorno nord'</span>, 43.12, 10.51, <span class="java-string">'N'</span>);
+
+<span class="sql-keyword">INSERT INTO</span> impianto(codice, denominazione, latitudine, longitudine, stato_manutenzione, data_ora) 
+<span class="sql-keyword">VALUES</span> (456, <span class="java-string">'Pisa centro'</span>, 43.72, 10.40, <span class="java-string">'S'</span>, <span class="java-string">'2024-05-20 10:30:00'</span>);</code></pre>
+        </section>
+
+        <section id="servlet-java">
+            <h2>Il Backend: Servlet Java (`GasServlet.java`)</h2>
+            <p>Il Web Service è implementato come un <strong>Servlet Java</strong>. Un Servlet è una classe Java che estende le capacità di un server web, gestendo le richieste e generando risposte. Utilizza <strong>JDBC (Java Database Connectivity)</strong> per comunicare con il database MySQL.</p>
+
+            <h3>1. Inizializzazione e Connessione al Database (metodo `init`)</h3>
+            <p>All'avvio del servlet, viene stabilita la connessione al database. Questa connessione verrà usata per tutte le operazioni successive.</p>
+            <pre><code class="language-java">
+<span class="java-keyword">public</span> <span class="java-keyword">class</span> <span class="java-type">GasServlet</span> <span class="java-keyword">extends</span> <span class="java-type">HttpServlet</span> {
+    <span class="java-comment">// Stringhe per i dettagli della connessione (driver, url, utente, password)</span>
+    <span class="java-keyword">private final</span> <span class="java-type">String</span> driver = <span class="java-string">"com.mysql.cj.jdbc.Driver"</span>; <span class="java-comment">// Per MySQL 8+</span>
+    <span class="java-keyword">private final</span> <span class="java-type">String</span> dbms_url = <span class="java-string">"jdbc:mysql://127.0.0.1:3306/"</span>;
+    <span class="java-keyword">private final</span> <span class="java-type">String</span> database = <span class="java-string">"gas"</span>;
+    <span class="java-keyword">private final</span> <span class="java-type">String</span> user = <span class="java-string">"root"</span>; <span class="java-comment">// Sostituire se necessario</span>
+    <span class="java-keyword">private final</span> <span class="java-type">String</span> password = <span class="java-string">""</span>;   <span class="java-comment">// Sostituire se necessario</span>
+
+    <span class="java-keyword">private</span> <span class="java-type">Connection</span> dbConnection;
+    <span class="java-keyword">private</span> <span class="java-keyword">boolean</span> connected;
+
+    <span class="java-annotation">@Override</span>
+    <span class="java-keyword">public</span> <span class="java-keyword">void</span> init() <span class="java-keyword">throws</span> <span class="java-type">ServletException</span> {
+        <span class="java-type">String</span> url = dbms_url + database;
+        <span class="java-keyword">try</span> {
+            <span class="java-comment">// 0. Caricamento del driver JDBC</span>
+            <span class="java-type">Class</span>.forName(driver);
+            <span class="java-comment">// 1. Stabilire la connessione</span>
+            dbConnection = <span class="java-type">DriverManager</span>.getConnection(url, user, password);
+            connected = <span class="java-keyword">true</span>;
+            log(<span class="java-string">"Connessione al database stabilita."</span>); <span class="java-comment">// Utile per debug</span>
+        } <span class="java-keyword">catch</span> (<span class="java-type">ClassNotFoundException</span> e) {
+            connected = <span class="java-keyword">false</span>;
+            log(<span class="java-string">"Errore: Driver JDBC MySQL non trovato."</span>, e);
+            <span class="java-keyword">throw new</span> <span class="java-type">ServletException</span>(<span class="java-string">"Driver JDBC non trovato"</span>, e);
+        } <span class="java-keyword">catch</span> (<span class="java-type">SQLException</span> e) {
+            connected = <span class="java-keyword">false</span>;
+            log(<span class="java-string">"Errore di connessione al database."</span>, e);
+            <span class="java-keyword">throw new</span> <span class="java-type">ServletException</span>(<span class="java-string">"Errore di connessione al DB"</span>, e);
+        }
+    }
+
+    <span class="java-comment">// Il metodo destroy() chiuderà la connessione quando il servlet viene fermato.</span>
+    <span class="java-annotation">@Override</span>
+    <span class="java-keyword">public</span> <span class="java-keyword">void</span> destroy() {
+        <span class="java-keyword">try</span> {
+            <span class="java-keyword">if</span> (dbConnection != <span class="java-keyword">null</span> && !dbConnection.isClosed()) {
+                dbConnection.close();
+                log(<span class="java-string">"Connessione al database chiusa."</span>);
+            }
+        } <span class="java-keyword">catch</span> (<span class="java-type">SQLException</span> e) {
+            log(<span class="java-string">"Errore durante la chiusura della connessione."</span>, e);
+        }
+    }
+    <span class="java-comment">// ... seguono i metodi doGet, doPut, ecc. ...</span>
+}</code></pre>
+            <p><strong>Spiegazione `init()`:</strong></p>
+            <ul>
+                <li>Il metodo `init()` è chiamato dal container servlet (es. Tomcat) una sola volta, quando il servlet viene caricato per la prima volta.</li>
+                <li><code>Class.forName(driver)</code>: Carica la classe del driver JDBC di MySQL in memoria. Questo registra il driver con `DriverManager`.</li>
+                <li><code>DriverManager.getConnection(...)</code>: Tenta di stabilire una connessione al database specificato dall'URL, usando le credenziali fornite.</li>
+                <li>La variabile booleana `connected` tiene traccia dello stato della connessione.</li>
+            </ul>
+
+            <h3>2. Gestione Richiesta GET: Elenco Impianti da Manutenere</h3>
+            <p>Quando l'app richiede l'elenco degli impianti non ancora manutenuti in una certa zona, invia una richiesta HTTP `GET`. Il metodo `doGet()` del servlet la gestisce.</p>
+            <pre><code class="language-java">
+<span class="java-annotation">@Override</span>
+<span class="java-keyword">protected</span> <span class="java-keyword">void</span> doGet(<span class="java-type">HttpServletRequest</span> request, <span class="java-type">HttpServletResponse</span> response)
+        <span class="java-keyword">throws</span> <span class="java-type">ServletException</span>, <span class="java-type">IOException</span> {
+
+    <span class="java-keyword">if</span> (!connected) {
+        response.sendError(<span class="java-type">HttpServletResponse</span>.SC_INTERNAL_SERVER_ERROR, <span class="java-string">"Server DBMS non disponibile."</span>);
+        <span class="java-keyword">return</span>;
+    }
+
+    <span class="java-comment">// Estrazione parametri dalla query string dell'URL</span>
+    <span class="java-comment">// es. /gas/impianti?lat_min=43.0&lat_max=43.2&lon_min=10.4&lon_max=10.6</span>
+    <span class="java-type">float</span> latMin = <span class="java-type">Float</span>.parseFloat(request.getParameter(<span class="java-string">"lat_min"</span>));
+    <span class="java-type">float</span> latMax = <span class="java-type">Float</span>.parseFloat(request.getParameter(<span class="java-string">"lat_max"</span>));
+    <span class="java-type">float</span> lonMin = <span class="java-type">Float</span>.parseFloat(request.getParameter(<span class="java-string">"lon_min"</span>));
+    <span class="java-type">float</span> lonMax = <span class="java-type">Float</span>.parseFloat(request.getParameter(<span class="java-string">"lon_max"</span>));
+    <span class="java-comment">// Aggiungere controlli per parametri mancanti o non validi (NumberFormatException)</span>
+
+    <span class="java-type">List</span><<span class="java-type">ImpiantoPojo</span>> impiantiTrovati = <span class="java-keyword">new</span> <span class="java-type">ArrayList</span><>();
+    <span class="java-type">String</span> sql = <span class="java-string">"SELECT codice, denominazione, latitudine, longitudine, stato_manutenzione, data_ora "</span> +
+                 <span class="java-string">"FROM impianto "</span> +
+                 <span class="java-string">"WHERE stato_manutenzione = 'N' "</span> + <span class="java-comment">// Solo quelli non manutenuti</span>
+                 <span class="java-string">"AND latitudine >= ? AND latitudine <= ? "</span> +
+                 <span class="java-string">"AND longitudine >= ? AND longitudine <= ?"</span>;
+
+    <span class="java-keyword">try</span> (<span class="java-type">PreparedStatement</span> pstmt = dbConnection.prepareStatement(sql)) {
+        <span class="java-comment">// Impostazione dei parametri nella query SQL per evitare SQL Injection</span>
+        pstmt.setFloat(1, latMin);
+        pstmt.setFloat(2, latMax);
+        pstmt.setFloat(3, lonMin);
+        pstmt.setFloat(4, lonMax);
+
+        <span class="java-keyword">try</span> (<span class="java-type">ResultSet</span> rs = pstmt.executeQuery()) { <span class="java-comment">// Esecuzione della query SELECT</span>
+            <span class="java-keyword">while</span> (rs.next()) { <span class="java-comment">// Iterazione sui risultati</span>
+                <span class="java-type">ImpiantoPojo</span> impianto = <span class="java-keyword">new</span> <span class="java-type">ImpiantoPojo</span>(); <span class="java-comment">// Un POJO per rappresentare l'impianto</span>
+                impianto.setCodice(rs.getInt(<span class="java-string">"codice"</span>));
+                impianto.setDenominazione(rs.getString(<span class="java-string">"denominazione"</span>));
+                <span class="java-comment">// ... set altri campi ...</span>
+                impianto.setStatoManutenzione(rs.getString(<span class="java-string">"stato_manutenzione"</span>));
+                <span class="java-comment">// Gestisci data_ora che può essere NULL</span>
+                <span class="java-type">Timestamp</span> ts = rs.getTimestamp(<span class="java-string">"data_ora"</span>);
+                <span class="java-keyword">if</span> (ts != <span class="java-keyword">null</span>) {
+                    impianto.setDataOra(ts.toLocalDateTime().toString()); <span class="java-comment">// Converti in stringa ISO</span>
+                }
+                impiantiTrovati.add(impianto);
+            }
+        }
+    } <span class="java-keyword">catch</span> (<span class="java-type">SQLException</span> e) {
+        log(<span class="java-string">"Errore SQL in doGet: "</span>, e);
+        response.sendError(<span class="java-type">HttpServletResponse</span>.SC_INTERNAL_SERVER_ERROR, <span class="java-string">"Errore durante la ricerca impianti."</span>);
+        <span class="java-keyword">return</span>;
+    }
+
+    <span class="java-comment">// Conversione della lista di oggetti ImpiantoPojo in una stringa JSON</span>
+    <span class="java-comment">// (usando una libreria come Gson o Jackson, o manualmente per JSON semplici)</span>
+    <span class="java-type">String</span> jsonResponse = convertiListaInJson(impiantiTrovati); <span class="java-comment">// Metodo helper da implementare</span>
+
+    response.setContentType(<span class="java-string">"application/json;charset=UTF-8"</span>);
+    <span class="java-type">PrintWriter</span> out = response.getWriter();
+    out.print(jsonResponse);
+    out.flush();
+}</code></pre>
+            <p><strong>Spiegazione `doGet()`:</strong></p>
+            <ul>
+                <li>Recupera i parametri (`lat_min`, ecc.) dall'URL.</li>
+                <li>Prepara una query SQL `SELECT` per trovare gli impianti con `stato_manutenzione = 'N'` all'interno delle coordinate specificate.</li>
+                <li>Usa un `PreparedStatement`: è importante per la sicurezza (previene SQL injection) e per le prestazioni. I `?` nella query sono placeholder che vengono sostituiti con i valori reali usando metodi come `pstmt.setFloat()`.</li>
+                <li>Esegue la query con `pstmt.executeQuery()`, che restituisce un `ResultSet`.</li>
+                <li>Scorre il `ResultSet` con `rs.next()`. Per ogni riga (impianto) trovata, crea un oggetto Java (un POJO - Plain Old Java Object, es. `ImpiantoPojo`) e lo popola con i dati letti dal `ResultSet` (es. `rs.getInt("codice")`).</li>
+                <li>Converte la lista di oggetti `ImpiantoPojo` in una stringa JSON. Questo di solito si fa con una libreria apposita come <strong>Gson</strong> (Google) o <strong>Jackson</strong>.</li>
+                <li>Imposta il `Content-Type` della risposta a `application/json`.</li>
+                <li>Scrive la stringa JSON nel `PrintWriter` del corpo della risposta.</li>
+            </ul>
+
+
+            <h3>3. Gestione Richiesta PUT: Registrazione Manutenzione</h3>
+            <p>Quando il tecnico registra una manutenzione, l'app invia una richiesta HTTP `PUT` all'URL dell'impianto specifico (es. `/gas/impianti/123`), includendo nel corpo della richiesta un JSON con la data e l'ora.</p>
+            <pre><code class="language-java">
+<span class="java-annotation">@Override</span>
+<span class="java-keyword">protected</span> <span class="java-keyword">void</span> doPut(<span class="java-type">HttpServletRequest</span> request, <span class="java-type">HttpServletResponse</span> response)
+        <span class="java-keyword">throws</span> <span class="java-type">ServletException</span>, <span class="java-type">IOException</span> {
+
+    <span class="java-keyword">if</span> (!connected) { /* ... come in doGet ... */ }
+
+    <span class="java-comment">// Estrazione del codice impianto dall'URL</span>
+    <span class="java-comment">// Esempio URL: /gas/impianti/123 -> pathInfo sarà "/123"</span>
+    <span class="java-type">String</span> pathInfo = request.getPathInfo();
+    <span class="java-keyword">if</span> (pathInfo == <span class="java-keyword">null</span> || pathInfo.equals(<span class="java-string">"/"</span>)) {
+        response.sendError(<span class="java-type">HttpServletResponse</span>.SC_BAD_REQUEST, <span class="java-string">"Codice impianto mancante nell'URL."</span>);
+        <span class="java-keyword">return</span>;
+    }
+    <span class="java-type">int</span> codiceImpianto;
+    <span class="java-keyword">try</span> {
+        codiceImpianto = <span class="java-type">Integer</span>.parseInt(pathInfo.substring(1)); <span class="java-comment">// Rimuove '/' iniziale</span>
+    } <span class="java-keyword">catch</span> (<span class="java-type">NumberFormatException</span> e) {
+        response.sendError(<span class="java-type">HttpServletResponse</span>.SC_BAD_REQUEST, <span class="java-string">"Codice impianto non valido."</span>);
+        <span class="java-keyword">return</span>;
+    }
+
+    <span class="java-comment">// Lettura del corpo JSON della richiesta</span>
+    <span class="java-type">StringBuilder</span> jsonBodyBuilder = <span class="java-keyword">new</span> <span class="java-type">StringBuilder</span>();
+    <span class="java-keyword">try</span> (<span class="java-type">BufferedReader</span> reader = request.getReader()) {
+        <span class="java-type">String</span> line;
+        <span class="java-keyword">while</span> ((line = reader.readLine()) != <span class="java-keyword">null</span>) {
+            jsonBodyBuilder.append(line);
+        }
+    }
+    <span class="java-type">String</span> jsonBody = jsonBodyBuilder.toString();
+
+    <span class="java-comment">// Parsing del JSON per ottenere data_ora (es. con Gson o Jackson)</span>
+    <span class="java-comment">// Assumiamo che il JSON sia: { "data_ora": "2024-05-21T10:30:00" }</span>
+    <span class="java-type">String</span> dataOraString = estraiDataOraDaJson(jsonBody); <span class="java-comment">// Metodo helper da implementare</span>
+    <span class="java-keyword">if</span> (dataOraString == <span class="java-keyword">null</span>) {
+        response.sendError(<span class="java-type">HttpServletResponse</span>.SC_BAD_REQUEST, <span class="java-string">"JSON malformato o 'data_ora' mancante."</span>);
+        <span class="java-keyword">return</span>;
+    }
+    <span class="java-type">LocalDateTime</span> dataOraManutenzione;
+    <span class="java-keyword">try</span> {
+        dataOraManutenzione = <span class="java-type">LocalDateTime</span>.parse(dataOraString); <span class="java-comment">// Formato ISO_LOCAL_DATE_TIME</span>
+    } <span class="java-keyword">catch</span> (<span class="java-type">DateTimeParseException</span> e) {
+        response.sendError(<span class="java-type">HttpServletResponse</span>.SC_BAD_REQUEST, <span class="java-string">"Formato 'data_ora' non valido."</span>);
+        <span class="java-keyword">return</span>;
+    }
+
+    <span class="java-type">String</span> sql = <span class="java-string">"UPDATE impianto SET stato_manutenzione = 'S', data_ora = ? WHERE codice = ?"</span>;
+    <span class="java-keyword">try</span> (<span class="java-type">PreparedStatement</span> pstmt = dbConnection.prepareStatement(sql)) {
+        pstmt.setTimestamp(1, <span class="java-type">Timestamp</span>.valueOf(dataOraManutenzione));
+        pstmt.setInt(2, codiceImpianto);
+
+        <span class="java-type">int</span> righeModificate = pstmt.executeUpdate(); <span class="java-comment">// Esecuzione del comando UPDATE</span>
+
+        <span class="java-keyword">if</span> (righeModificate > 0) {
+            response.setStatus(<span class="java-type">HttpServletResponse</span>.SC_NO_CONTENT); <span class="java-comment">// 204: Successo, nessun contenuto da restituire</span>
+        } <span class="java-keyword">else</span> {
+            response.sendError(<span class="java-type">HttpServletResponse</span>.SC_NOT_FOUND, <span class="java-string">"Impianto non trovato o stato già aggiornato."</span>);
+        }
+    } <span class="java-keyword">catch</span> (<span class="java-type">SQLException</span> e) {
+        log(<span class="java-string">"Errore SQL in doPut: "</span>, e);
+        response.sendError(<span class="java-type">HttpServletResponse</span>.SC_INTERNAL_SERVER_ERROR, <span class="java-string">"Errore durante l'aggiornamento impianto."</span>);
+    }
+}</code></pre>
+            <p><strong>Spiegazione `doPut()`:</strong></p>
+            <ul>
+                <li>Estrae il `{codice}` dell'impianto dall'URL usando `request.getPathInfo()`.</li>
+                <li>Legge il corpo della richiesta (che dovrebbe essere JSON) usando `request.getReader()`.</li>
+                <li>Fa il parsing del JSON per estrarre il valore di `data_ora`. Anche qui, una libreria JSON è molto utile.</li>
+                <li>Converte la stringa `data_ora` in un oggetto `java.time.LocalDateTime`.</li>
+                <li>Prepara una query SQL `UPDATE` per cambiare `stato_manutenzione` a 'S' e impostare `data_ora` per l'impianto specificato.</li>
+                <li>Usa `PreparedStatement` per impostare i valori.</li>
+                <li>Esegue il comando con `pstmt.executeUpdate()`, che restituisce il numero di righe modificate.</li>
+                <li>Se `righeModificate > 0`, la manutenzione è stata registrata con successo. La risposta HTTP standard per un PUT riuscito che non restituisce contenuto è `204 No Content`.</li>
+                <li>Altrimenti, se nessuna riga è stata modificata, l'impianto potrebbe non esistere, e si invia un errore `404 Not Found`.</li>
+            </ul>
+        </section>
+
+        <section id="api-rest">
+            <h2>L'Interfaccia API REST</h2>
+            <p>L'API REST definisce "il contratto" tra l'app client e il web service. Specifica gli URL (endpoint), i metodi HTTP (GET, PUT, POST, DELETE), i parametri di richiesta e i formati di risposta.</p>
+
+            <h3>Operazione: Ottenere elenco impianti da manutenere in una zona</h3>
+            <ul>
+                <li><strong>Metodo HTTP:</strong> <code>GET</code></li>
+                <li><strong>Endpoint Relativo:</strong> <code>/impianti</code> (l'URL completo sarà tipo <code>http://localhost:8080/NOME_APP/impianti</code>)</li>
+                <li><strong>Parametri Query String:</strong>
+                    <ul>
+                        <li><code>lat_min</code> (float): Latitudine minima</li>
+                        <li><code>lat_max</code> (float): Latitudine massima</li>
+                        <li><code>lon_min</code> (float): Longitudine minima</li>
+                        <li><code>lon_max</code> (float): Longitudine massima</li>
+                    </ul>
+                </li>
+                <li><strong>Esempio URL completo:</strong> <code>http://localhost:8080/gas/impianti?lat_min=43.0&lat_max=43.2&lon_min=10.4&lon_max=10.6</code></li>
+                <li><strong>Corpo Richiesta:</strong> Nessuno.</li>
+                <li><strong>Risposta (Successo 200 OK):</strong> Un array JSON di oggetti impianto.
+                    <pre><code class="language-json">[
+  { "<span class="json-key">codice</span>": <span class="json-number">123</span>, "<span class="json-key">denominazione</span>": "<span class="json-string">Livorno nord</span>", "<span class="json-key">latitudine</span>": <span class="json-number">43.12</span>, ..., "<span class="json-key">statoManutenzione</span>": "<span class="json-string">N</span>", "<span class="json-key">dataOra</span>": <span class="json-keyword">null</span> },
+  { "<span class="json-key">codice</span>": <span class="json-number">789</span>, "<span class="json-key">denominazione</span>": "<span class="json-string">Livorno est</span>", "<span class="json-key">latitudine</span>": <span class="json-number">43.10</span>, ..., "<span class="json-key">statoManutenzione</span>": "<span class="json-string">N</span>", "<span class="json-key">dataOra</span>": <span class="json-keyword">null</span> }
+]</code></pre>
+                </li>
+                 <li><strong>Risposta (Errore):</strong> Codici HTTP come 400 (parametri errati), 500 (errore server).</li>
+            </ul>
+
+            <h3>Operazione: Registrare avvenuta manutenzione di un impianto</h3>
+            <ul>
+                <li><strong>Metodo HTTP:</strong> <code>PUT</code></li>
+                <li><strong>Endpoint Relativo:</strong> <code>/impianti/{codiceImpianto}</code> (es. <code>/impianti/123</code>)</li>
+                <li><strong>Parametri URL:</strong> <code>{codiceImpianto}</code> è il codice dell'impianto da aggiornare.</li>
+                <li><strong>Corpo Richiesta (JSON):</strong> Deve contenere la data e l'ora della manutenzione.
+                    <pre><code class="language-json">{
+  "<span class="json-key">data_ora</span>": "<span class="json-string">2024-05-21T10:30:00</span>" <span class="java-comment">// Formato ISO 8601 Local Date Time</span>
+}</code></pre>
+                </li>
+                <li><strong>Risposta (Successo 204 No Content):</strong> Nessun corpo nella risposta, solo lo status code indica successo.</li>
+                <li><strong>Risposta (Errore):</strong> Codici HTTP come 400 (JSON malformato, data_ora mancante o formato errato), 404 (impianto non trovato), 500 (errore server).</li>
+            </ul>
+        </section>
+
+        <section id="setup">
+            <h2>Come Far Partire il Progetto (Passaggi Chiave)</h2>
+            <p>Per mettere in funzione questo web service, segui questi passaggi:</p>
+            <ol class="setup-steps">
+                <li>
+                    <strong>Configura il Database MySQL:</strong>
+                    <ul>
+                        <li>Installa MySQL Server.</li>
+                        <li>Crea il database (es. `gas`).</li>
+                        <li>Esegui lo script SQL fornito per creare la tabella `impianto`.</li>
+                        <li>Assicurati che l'utente MySQL che userai nel servlet Java (es. `root` o un utente dedicato) abbia i permessi per accedere e modificare il database `gas`.</li>
+                    </ul>
+                </li>
+                <li>
+                    <strong>Crea un Progetto Web Dinamico Java:</strong>
+                    <ul>
+                        <li>Usa un IDE come IntelliJ IDEA, Eclipse, o NetBeans.</li>
+                        <li>Scegli di creare un "Dynamic Web Project" o "Web Application".</li>
+                    </ul>
+                </li>
+                <li>
+                    <strong>Aggiungi le Dipendenze (Librerie JAR):</strong>
+                    <ul>
+                        <li><strong>Driver JDBC MySQL:</strong> Scarica il file `mysql-connector-j-X.Y.Z.jar` dal sito ufficiale di MySQL e aggiungilo alla cartella `WEB-INF/lib` del tuo progetto.</li>
+                        <li><strong>Libreria JSON (Consigliata):</strong> Scarica una libreria come Gson (`gson-X.Y.Z.jar`) o Jackson e aggiungila a `WEB-INF/lib`. Ti semplificherà la vita per convertire oggetti Java in JSON e viceversa.</li>
+                        <li><strong>Servlet API:</strong> Di solito è fornita dal server Tomcat e non devi aggiungerla al WAR, ma ti serve per compilare il codice. Assicurati che sia nel classpath del tuo IDE (spesso impostata come "provided scope" se usi Maven/Gradle).</li>
+                    </ul>
+                </li>
+                <li>
+                    <strong>Scrivi il Codice del Servlet:</strong>
+                    <ul>
+                        <li>Crea la classe `GasServlet.java` (o con il nome che preferisci) estendendo `javax.servlet.http.HttpServlet` (o `jakarta.servlet.http.HttpServlet` per Tomcat 10+).</li>
+                        <li>Implementa i metodi `init()`, `destroy()`, `doGet()`, `doPut()` come mostrato negli esempi.</li>
+                        <li>Crea eventuali classi POJO (es. `ImpiantoPojo`) se necessario per strutturare i dati.</li>
+                    </ul>
+                </li>
+                <li>
+                    <strong>Configura il Deployment Descriptor (`web.xml`):</strong>
+                    <ul>
+                        <li>Questo file si trova in `WEB-INF/web.xml`.</li>
+                        <li>Definisci il tuo servlet e mappalo a un pattern URL.
+                        <pre><code class="language-xml"><?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+         version="3.1">
+
+    <servlet>
+        <servlet-name>GasManagerServlet</servlet-name>
+        <servlet-class>com.example.GasServlet</servlet-class> <span class="java-comment"><!-- Sostituisci con il tuo package e nome classe --></span>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>GasManagerServlet</servlet-name>
+        <url-pattern>/impianti/*</url-pattern> <span class="java-comment"><!-- Intercetta URL tipo /impianti e /impianti/qualcosa --></span>
+    </servlet-mapping>
+
+    <session-config>
+        <session-timeout>30</session-timeout>
+    </session-config>
+</web-app></code></pre>
+                        </li>
+                    </ul>
+                </li>
+                 <li>
+                    <strong>Configura il Contesto dell'Applicazione (`context.xml` - Opzionale ma Consigliato):</strong>
+                    <ul>
+                        <li>Per definire il "path di contesto" base della tua applicazione (es. `/gas`).
+                        <li>Crea un file `context.xml` nella cartella `META-INF` del tuo progetto (se stai creando un WAR) oppure nella directory `conf/Catalina/localhost/` del tuo server Tomcat, nominandolo `tuoappnome.xml`.</li>
+                        <pre><code class="language-xml"><?xml version="1.0" encoding="UTF-8"?>
+<Context path="/gas"/> 
+<span class="java-comment"><!-- Con questo, l'URL base sarà http://localhost:8080/gas -->
+<!-- E gli endpoint del servlet diventeranno http://localhost:8080/gas/impianti/... -->
+                        </code></pre>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <strong>Prepara e Avvia il Server Web (Apache Tomcat):</strong>
+                    <ul>
+                        <li>Scarica e installa Apache Tomcat se non l'hai già fatto.</li>
+                        <li>Configura Tomcat se necessario (es. porte, utenti manager).</li>
+                    </ul>
+                </li>
+                <li>
+                    <strong>Fai il Deploy dell'Applicazione e Testa:</strong>
+                    <ul>
+                        <li>Nel tuo IDE, di solito c'è un'opzione per "Build" o "Export" il progetto come file `.WAR` (Web Application Archive).</li>
+                        <li>Copia questo file `.WAR` nella directory `webapps` della tua installazione di Tomcat.</li>
+                        <li>Avvia (o riavvia) Tomcat. Tomcat dovrebbe automaticamente decomprimere e deployare la tua applicazione.</li>
+                        <li>Usa uno strumento come <strong>Postman</strong>, <strong>curl</strong> dalla linea di comando, o anche il tuo browser (per le richieste GET semplici senza parametri complessi) per testare gli endpoint definiti nella tua API.
+                            <ul>
+                                <li>Es. `GET http://localhost:8080/gas/impianti?lat_min=40&lat_max=45&lon_min=10&lon_max=15`</li>
+                                <li>Es. `PUT http://localhost:8080/gas/impianti/123` con il corpo JSON appropriato.</li>
+                            </ul>
+                        </li>
+                        <li>Controlla i log di Tomcat e i log del tuo servlet (se hai usato `System.out.println` o un framework di logging) per debuggare eventuali problemi.</li>
+                    </ul>
+                </li>
+            </ol>
+        </section>
+
+        <footer>
+            <p>Spero che questa guida ti sia stata utile per capire meglio come funziona e come si realizza un Web Service di questo tipo. La chiave è comprendere i singoli componenti e come interagiscono.</p>
+        </footer>
+    </div>
+
+</body>
+</html>
