@@ -1,7 +1,4 @@
-package com.example;
-
-// Salva come: GasClientProgetto/src/it/clientgas/GasServiceClient.java
-package com.clientgas;
+package com.example
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -13,10 +10,10 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import com.google.gson.Gson; // Importa Gson
-import com.google.gson.reflect.TypeToken; // Per deserializzare liste
+import com.google.gson.reflect.TypeToken; 
 import java.lang.reflect.Type;
 import java.util.List;
-import java.util.Arrays; // Per Arrays.asList se non usi TypeToken
+import java.util.Arrays; 
 
 public class GasServiceClient {
 
